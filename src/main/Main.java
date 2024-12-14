@@ -20,20 +20,20 @@ public class Main {
         Task task2 = new Task(null, "Task 2", "Description of task 2", Status.NEW);
         Task createdTask2 = manager.createTask(task2);
 
-        Epic epic1 = new Epic(null, "Epic 1", "Description of epic 1", Status.NEW);
+        Epic epic1 = new Epic(null, "Epic 1", "Description of epic 1");
         manager.createEpic(epic1);
         Epic createdEpic1 = manager.getEpic(epic1.getId());
-        Epic epic2 = new Epic(null, "Epic 2", "Description of epic 2", Status.NEW);
+        Epic epic2 = new Epic(null, "Epic 2", "Description of epic 2");
         manager.createEpic(epic2);
         Epic createdEpic2 = manager.getEpic(epic2.getId());
 
         Subtask subtask1 = new Subtask(null, "Subtask 1", "Description of subtask 1", Status.NEW,
                 createdEpic1.getId());
         manager.createSubtask(subtask1);
-        Subtask subtask2 = new Subtask(null,"Subtask 2", "Description of subtask 2", Status.NEW,
+        Subtask subtask2 = new Subtask(null, "Subtask 2", "Description of subtask 2", Status.NEW,
                 createdEpic1.getId());
         manager.createSubtask(subtask2);
-        Subtask subtask3 = new Subtask(null,"Subtask 3", "Description of subtask 3", Status.NEW,
+        Subtask subtask3 = new Subtask(null, "Subtask 3", "Description of subtask 3", Status.NEW,
                 createdEpic2.getId());
         manager.createSubtask(subtask3);
 
@@ -67,8 +67,7 @@ public class Main {
         Task updatedTask = new Task(createdTask1.getId(), "Task 1", "Another description of Task 1",
                 Status.IN_PROGRESS);
         createdTask1 = manager.updateTask(updatedTask);
-        Epic updatedEpic1 = new Epic(epic1.getId(), "Epic 1", "Another description of Epic 1",
-                epic1.getStatus());
+        Epic updatedEpic1 = new Epic(epic1.getId(), "Epic 1", "Another description of Epic 1");
         manager.updateEpic(updatedEpic1);
         subtask1.setStatus(Status.DONE);
         manager.updateSubtask(subtask1);
@@ -107,11 +106,19 @@ public class Main {
         System.out.println();
 
         manager.deleteAllTasks();
-        manager.deleteAllEpics();
+//        manager.deleteAllEpics(); // закомментил для теста по нахождения Сабтасков в Эпике
         manager.deleteAllSubtask();
         System.out.println("*** Test of deleting ALL Tasks, Epics, Subtasks ***");
         System.out.println("All Tasks: " + manager.findAllTasks());
         System.out.println("All Epics: " + manager.findAllEpics());
         System.out.println("All Subtasks: " + manager.findAllSubtasks());
+        System.out.println();
+
+
+        //Удалил все Сабтаски и в при поиске Сабтасков в Эпике выводит null
+        ArrayList<Subtask> subtasksInEpicTest = manager.getSubtasksOfEpic(epic1.getId());
+        System.out.println("*** Test of finding all Subtasks in Epic ***");
+        System.out.println("Epic name: " + epic1.getName() + ". Subtasks: " + subtasksInEpicTest);
+        System.out.println();
     }
 }

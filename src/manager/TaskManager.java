@@ -28,9 +28,12 @@ public class TaskManager {
     //TASKS//
     public Task createTask(Task newTask) {
         int newId = nextId();
-        Task createdTask = new Task(newId, newTask.getName(), newTask.getDescription(), newTask.getStatus());
-        tasks.put(createdTask.getId(), createdTask);
+//        Нам на QA вебинаре посоветовали так сделать, использовать разные ссылки на задачи для мапы и те,
+//        которые возвращаем, но действительно, так проще)
+//        Task createdTask = new Task(newId, newTask.getName(), newTask.getDescription(), newTask.getStatus());
+//        tasks.put(createdTask.getId(), createdTask);
         newTask.setId(newId);
+        tasks.put(newId, newTask);
         return newTask;
     }
 
@@ -57,18 +60,13 @@ public class TaskManager {
     }
 
     public Task findTaskById(Integer id) {
-        if (tasks.containsKey(id)) {
-            Task existingTask = tasks.get(id);
-            return existingTask;
-        } else {
-            return null;
-        }
+        return tasks.get(id);
     }
 
     //EPICS//
     public void createEpic(Epic newEpic) {
         int newId = nextId();
-        Epic createdEpic = new Epic(newId, newEpic.getName(), newEpic.getDescription(), newEpic.getStatus());
+        Epic createdEpic = new Epic(newId, newEpic.getName(), newEpic.getDescription());
         epics.put(createdEpic.getId(), createdEpic);
         newEpic.setId(newId);
     }
@@ -98,6 +96,7 @@ public class TaskManager {
 
     public void deleteAllEpics() {
         epics = new HashMap<>();
+        subtasks = new HashMap<>();
     }
 
     public ArrayList<Epic> findAllEpics() {
@@ -105,15 +104,10 @@ public class TaskManager {
     }
 
     public Epic findEpicById(Integer id) {
-        if (epics.containsKey(id)) {
-            Epic existingEpic = epics.get(id);
-            return existingEpic;
-        } else {
-            return null;
-        }
+        return epics.get(id);
     }
 
-    public void updateEpicStatus(Epic epic) {
+    private void updateEpicStatus(Epic epic) {
         ArrayList<Subtask> subtasksOfEpic = getSubtasksOfEpic(epic.getId());
         boolean allNew = true;
         boolean allDone = true;
@@ -151,15 +145,14 @@ public class TaskManager {
         }
         return result;
     }
+
     //SUBTASKS//
     public Subtask createSubtask(Subtask newSubtask) {
-        int newId = nextId();
-        Subtask createdSubtask = new Subtask(newId, newSubtask.getName(), newSubtask.getDescription(),
-                newSubtask.getStatus(), newSubtask.getEpicId());
-        subtasks.put(createdSubtask.getId(), createdSubtask);
-        newSubtask.setId(newId);
         Epic epic = epics.get(newSubtask.getEpicId());
         if (epic != null) {
+            int newId = nextId();
+            subtasks.put(newId, newSubtask);
+            newSubtask.setId(newId);
             epic.addSubtask(newSubtask.getId());
             updateEpicStatus(epic);
         }
@@ -193,8 +186,16 @@ public class TaskManager {
         }
     }
 
+// Немного не понял тут комментарий: "И удалить подзадачи у эпиков, а также обновить статусы всех эпиков"
+// Если я стираю все Сабтаски, то мне выводит null при поиске Сабтасков в определенном Эпике,
+// проверял в Мэйне, тест оставил. Добавил обновление статуса в Эпиках
     public void deleteAllSubtask() {
         subtasks = new HashMap<>();
+        for (Epic epic : epics.values()) {
+            epic.getSubtasksId().clear();
+            updateEpicStatus(epic);
+        }
+
     }
 
     public ArrayList<Subtask> findAllSubtasks() {
