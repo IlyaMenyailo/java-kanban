@@ -175,8 +175,7 @@ public class TaskManager {
     }
 
     public void deleteSubtask(Integer id) {
-        Subtask subtask = subtasks.get(id);
-        subtasks.remove(id);
+        Subtask subtask = subtasks.remove(id);
         if (subtask != null) {
             Epic epic = epics.get(subtask.getEpicId());
             if (epic != null) {
@@ -186,9 +185,6 @@ public class TaskManager {
         }
     }
 
-// Немного не понял тут комментарий: "И удалить подзадачи у эпиков, а также обновить статусы всех эпиков"
-// Если я стираю все Сабтаски, то мне выводит null при поиске Сабтасков в определенном Эпике,
-// проверял в Мэйне, тест оставил. Добавил обновление статуса в Эпиках
     public void deleteAllSubtask() {
         subtasks = new HashMap<>();
         for (Epic epic : epics.values()) {
@@ -204,8 +200,7 @@ public class TaskManager {
 
     public Subtask findSubtaskById(Integer id) {
         if (subtasks.containsKey(id)) {
-            Subtask existingSubtask = subtasks.get(id);
-            return existingSubtask;
+            return subtasks.get(id);
         } else {
             return null;
         }
