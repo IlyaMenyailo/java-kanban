@@ -1,32 +1,47 @@
 package main;
 
+import manager.Managers;
 import manager.TaskManager;
 import status.Status;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
-import java.util.ArrayList;
-
 public class Main {
 
     public static void main(String[] args) {
         System.out.println("Поехали!\n");
 
-        TaskManager manager = new TaskManager();
+        TaskManager manager = Managers.getDefault();
 
+        //ЗАДАЧИ
         Task task1 = new Task(null, "Task 1", "Description of task 1", Status.NEW);
-        Task createdTask1 = manager.createTask(task1);
+        manager.createTask(task1);
         Task task2 = new Task(null, "Task 2", "Description of task 2", Status.NEW);
-        Task createdTask2 = manager.createTask(task2);
+        manager.createTask(task2);
+        Task task3 = new Task(null, "Task 3", "Description of task 3", Status.NEW);
+        manager.createTask(task3);
+        Task task4 = new Task(null, "Task 4", "Description of task 4", Status.NEW);
+        manager.createTask(task4);
 
+        Task createdTask1 = manager.getTask(task1.getId());
+        Task createdTask2 = manager.getTask(task2.getId());
+        Task createdTask3 = manager.getTask(task3.getId());
+        Task createdTask4 = manager.getTask(task4.getId());
+
+        //ЭПИКИ
         Epic epic1 = new Epic(null, "Epic 1", "Description of epic 1");
         manager.createEpic(epic1);
-        Epic createdEpic1 = manager.getEpic(epic1.getId());
         Epic epic2 = new Epic(null, "Epic 2", "Description of epic 2");
         manager.createEpic(epic2);
-        Epic createdEpic2 = manager.getEpic(epic2.getId());
+        Epic epic3 = new Epic(null, "Epic 3", "Description of epic 3");
+        manager.createEpic(epic3);
 
+        Epic createdEpic1 = manager.getEpic(epic1.getId());
+        Epic createdEpic2 = manager.getEpic(epic2.getId());
+        Epic createdEpic3 = manager.getEpic(epic3.getId());
+
+        //САБТАСКИ
         Subtask subtask1 = new Subtask(null, "Subtask 1", "Description of subtask 1", Status.NEW,
                 createdEpic1.getId());
         manager.createSubtask(subtask1);
@@ -36,89 +51,30 @@ public class Main {
         Subtask subtask3 = new Subtask(null, "Subtask 3", "Description of subtask 3", Status.NEW,
                 createdEpic2.getId());
         manager.createSubtask(subtask3);
+        Subtask subtask4 = new Subtask(null, "Subtask 4", "Description of subtask 4", Status.NEW,
+                createdEpic3.getId());
+        manager.createSubtask(subtask4);
+        Subtask subtask5 = new Subtask(null, "Subtask 5", "Description of subtask 5", Status.NEW,
+                createdEpic3.getId());
+        manager.createSubtask(subtask5);
+        Subtask subtask6 = new Subtask(null, "Subtask 6", "Description of subtask 6", Status.NEW,
+                createdEpic3.getId());
+        manager.createSubtask(subtask6);
 
-        System.out.println("*** Test for printing Tasks, Epics, Subtasks ***");
-        System.out.println("All Tasks: " + manager.findAllTasks());
-        System.out.println("All Epics: " + manager.findAllEpics());
-        System.out.println("All Subtasks: " + manager.findAllSubtasks());
-        System.out.println();
+        System.out.println("История вариант 1:");
+        System.out.println(manager.getHistory());
 
-        System.out.println("Task 1. Name: " + createdTask1.getName() + ". Description: " + createdTask1.getDescription()
-                + ". Status: " + createdTask1.getStatus());
-        System.out.println("Task 2. Name: " + createdTask2.getName() + ". Description: " + createdTask2.getDescription()
-                + ". Status: " + createdTask2.getStatus());
-        System.out.println("Epic 1. Name: " + createdEpic1.getName() + ". Description: " + createdEpic1.getDescription()
-                + ". Status: " + createdEpic1.getStatus());
-        System.out.println("Epic 2. Name: " + createdEpic2.getName() + ". Description: " + createdEpic2.getDescription()
-                + ". Status: " + createdEpic2.getStatus());
-        System.out.println("Subtask 1. Name: " + subtask1.getName() + ". Description: " +
-                subtask1.getDescription() + ". Status: " + subtask1.getStatus());
-        System.out.println("Subtask 2. Name: " + subtask2.getName() + ". Description: " +
-                subtask2.getDescription() + ". Status: " + subtask2.getStatus());
-        System.out.println("Subtask 3. Name: " + subtask3.getName() + ". Description: " +
-                subtask3.getDescription() + ". Status: " + subtask3.getStatus());
-        System.out.println();
+        Subtask createdSubtask1 = manager.getSubtask(subtask1.getId());
+        Subtask createdSubtask2 = manager.getSubtask(subtask2.getId());
+        Subtask createdSubtask3 = manager.getSubtask(subtask3.getId());
+        Subtask createdSubtask4 = manager.getSubtask(subtask4.getId());
+        Subtask createdSubtask5 = manager.getSubtask(subtask5.getId());
+        Subtask createdSubtask6 = manager.getSubtask(subtask6.getId());
+        Task createdTask5 = manager.getTask(task1.getId());
+        Task createdTask6 = manager.getTask(task2.getId());
+        Task createdTask7 = manager.getTask(task3.getId());
 
-        ArrayList<Subtask> subtasksInEpic = manager.getSubtasksOfEpic(epic1.getId());
-        System.out.println("*** Test of finding all Subtasks in Epic ***");
-        System.out.println("Epic name: " + epic1.getName() + ". Subtasks: " + subtasksInEpic);
-        System.out.println();
-
-        Task updatedTask = new Task(createdTask1.getId(), "Task 1", "Another description of Task 1",
-                Status.IN_PROGRESS);
-        createdTask1 = manager.updateTask(updatedTask);
-        Epic updatedEpic1 = new Epic(epic1.getId(), "Epic 1", "Another description of Epic 1");
-        manager.updateEpic(updatedEpic1);
-        subtask1.setStatus(Status.DONE);
-        manager.updateSubtask(subtask1);
-        subtask2.setStatus(Status.IN_PROGRESS);
-        manager.updateSubtask(subtask2);
-
-        System.out.println("*** Test of updating Tasks, Epics, Subtasks ***");
-        System.out.println("Task 1. Name: " + createdTask1.getName() + ". Description: " + createdTask1.getDescription()
-                + ". Status: " + createdTask1.getStatus());
-        System.out.println("Epic 1. Name: " + createdEpic1.getName() + ". Description: " + createdEpic1.getDescription()
-                + ". Status: " + createdEpic1.getStatus());
-        System.out.println("Epic 2. Name: " + createdEpic2.getName() + ". Description: " + createdEpic2.getDescription()
-                + ". Status: " + epic2.getStatus());
-        System.out.println("Subtask 1. Name: " + subtask1.getName() + ". Description: " +
-                subtask1.getDescription() + ". Status: " + subtask1.getStatus());
-        System.out.println("Subtask 2. Name: " + subtask2.getName() + ". Description: " +
-                subtask2.getDescription() + ". Status: " + subtask2.getStatus());
-        System.out.println();
-
-        System.out.println("*** Test for finding Tasks, Epics, Subtasks ***");
-        Task findTaskById = manager.findTaskById(task1.getId());
-        Epic findEpicById = manager.findEpicById(epic1.getId());
-        Subtask findSubtaskById = manager.findSubtaskById(subtask1.getId());
-        System.out.println(findTaskById);
-        System.out.println(findEpicById);
-        System.out.println(findSubtaskById);
-        System.out.println();
-
-        manager.deleteTask(task1.getId());
-        manager.deleteEpic(epic2.getId());
-        manager.deleteSubtask(subtask1.getId());
-        System.out.println("*** Test of deleting Tasks, Epics, Subtasks ***");
-        System.out.println("All Tasks after deletion " + manager.findAllTasks());
-        System.out.println("All Epics after deletion " + manager.findAllEpics());
-        System.out.println("All Subtasks after deletion " + manager.findAllSubtasks());
-        System.out.println();
-
-        manager.deleteAllTasks();
-//        manager.deleteAllEpics(); // закомментил для теста по нахождения Сабтасков в Эпике
-        manager.deleteAllSubtask();
-        System.out.println("*** Test of deleting ALL Tasks, Epics, Subtasks ***");
-        System.out.println("All Tasks: " + manager.findAllTasks());
-        System.out.println("All Epics: " + manager.findAllEpics());
-        System.out.println("All Subtasks: " + manager.findAllSubtasks());
-        System.out.println();
-
-
-        //Удалил все Сабтаски и в при поиске Сабтасков в Эпике выводит null
-        ArrayList<Subtask> subtasksInEpicTest = manager.getSubtasksOfEpic(epic1.getId());
-        System.out.println("*** Test of finding all Subtasks in Epic ***");
-        System.out.println("Epic name: " + epic1.getName() + ". Subtasks: " + subtasksInEpicTest);
-        System.out.println();
+        System.out.println("История вариант 2:");
+        System.out.println(manager.getHistory());
     }
 }
