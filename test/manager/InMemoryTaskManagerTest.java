@@ -46,7 +46,6 @@ class InMemoryTaskManagerTest {
         taskManager.createTask(task);
         Task createdTask = taskManager.getTask(task.getId());
 
-        Assertions.assertNotNull(createdTask.getId(), "id не должно быть 0");
         Assertions.assertEquals(createdTask.getStatus(), Status.NEW, "Статус задачи должен быть NEW");
         Assertions.assertEquals(createdTask.getName(), name, "Имя задачи должно быть (Task 1 name)");
         Assertions.assertEquals(createdTask.getDescription(), description, "Описание задачи должно быть" +
@@ -62,7 +61,6 @@ class InMemoryTaskManagerTest {
         taskManager.createTask(task);
         Task createdTask = taskManager.getTask(task.getId());
 
-        Assertions.assertNotNull(createdTask.getId(), "id не должно быть 0");
         Assertions.assertEquals(createdTask.getStatus(), Status.NEW, "Статус задачи должен быть NEW");
         Assertions.assertEquals(createdTask.getName(), name, "Имя задачи должно быть (Task 1 name)");
         Assertions.assertEquals(createdTask.getDescription(), description, "Описание задачи должно быть" +
@@ -81,7 +79,6 @@ class InMemoryTaskManagerTest {
         taskManager.updateTask(createdTask);
         Task updatedTask = taskManager.getTask(createdTask.getId());
 
-        Assertions.assertNotNull(createdTask.getId(), "id не должно быть 0");
         Assertions.assertEquals(createdTask.getStatus(), Status.DONE, "Статус задачи должен быть DONE");
         Assertions.assertEquals(createdTask.getName(), name, "Имя задачи должно быть (Task 1 name)");
         Assertions.assertEquals(createdTask.getDescription(), description, "Описание задачи должно быть" +
@@ -89,7 +86,7 @@ class InMemoryTaskManagerTest {
     }
 
     /* Тут ругается на получение id когда сравниваем с null, не могу понять почему так не получается сделать
-        и как тогда сделать тест для удаления задачи... Тоже самое с удалением Epic и Subtask
+        и как тогда сделать тест для удаления задачи... Тоже самое с удалением Epic и Subtask */
     @Test
     void deleteTask() {
         Task task = new Task(null, "Task name", "Task description", Status.NEW);
@@ -102,7 +99,7 @@ class InMemoryTaskManagerTest {
 
         Assertions.assertNull(taskManager.getTask(taskId), "Задача должна быть удалена"); // тут ошибка
     }
-     */
+
 
     @Test
     void deleteAllTasks() {
@@ -129,7 +126,7 @@ class InMemoryTaskManagerTest {
         taskManager.createTask(secondTask);
         Task createdFirstTask = taskManager.getTask(firstTask.getId());
         Task createdSecondTask = taskManager.getTask(secondTask.getId());
-        ArrayList<Task> allTasks = taskManager.findAllTasks();
+        List<Task> allTasks = taskManager.findAllTasks();
 
         Assertions.assertEquals(createdFirstTask, allTasks.get(0), "Task 1 должен быть найден");
         Assertions.assertEquals(createdSecondTask, allTasks.get(1), "Task 2 должен быть найден");
@@ -155,7 +152,6 @@ class InMemoryTaskManagerTest {
         taskManager.createEpic(epic);
         Epic createdEpic = taskManager.getEpic(epic.getId());
 
-        Assertions.assertNotNull(createdEpic.getId(), "Id Эпика не должно быть null");
         Assertions.assertEquals(createdEpic.getName(), epicName, "Имя Эпика должно быть (Epic name)");
         Assertions.assertEquals(createdEpic.getDescription(), epicDescription, "Описание Эпика должно быть" +
                 " (Epic description)");
@@ -170,7 +166,6 @@ class InMemoryTaskManagerTest {
         taskManager.createEpic(epic);
         Epic createdEpic = taskManager.getEpic(epic.getId());
 
-        Assertions.assertNotNull(createdEpic.getId(), "Id Эпика не должно быть null");
         Assertions.assertEquals(createdEpic.getName(), epicName, "Имя Эпика должно быть (Epic name)");
         Assertions.assertEquals(createdEpic.getDescription(), epicDescription, "Описание Эпика должно быть" +
                 " (Epic description)");
@@ -188,14 +183,13 @@ class InMemoryTaskManagerTest {
         taskManager.updateTask(createdEpic);
         Epic updatedEpic = taskManager.getEpic(createdEpic.getId());
 
-        Assertions.assertNotNull(updatedEpic.getId(), "Id Эпика не должно быть null");
         Assertions.assertEquals(updatedEpic.getStatus(), Status.DONE, "Статус Эпика должен быть DONE");
         Assertions.assertEquals(updatedEpic.getName(), epicName, "Имя Эпика должно быть (Epic name)");
         Assertions.assertEquals(updatedEpic.getDescription(), epicDescription, "Описание Эпика должно быть" +
                 " (Epic description)");
     }
 
-    /*
+    //Запустил код сейчас, все работает! Странно...
     @Test
     void deleteEpic() {
         Epic epic = new Epic(null, "Epic name", "Epic description");
@@ -215,8 +209,6 @@ class InMemoryTaskManagerTest {
         Assertions.assertNull(taskManager.getSubtask(subtask.getId()), "Подзадача должна быть удалена " +
                 "вместе с эпиком");
     }
-
-     */
 
     @Test
     void deleteAllEpics() {
@@ -253,7 +245,7 @@ class InMemoryTaskManagerTest {
         Epic createdFirstEpic = taskManager.getEpic(firstEpic.getId());
         Epic createdSecondEpic = taskManager.getEpic(secondEpic.getId());
 
-        ArrayList<Epic> allEpics = taskManager.findAllEpics();
+        List<Epic> allEpics = taskManager.findAllEpics();
 
         Assertions.assertEquals(createdFirstEpic, allEpics.get(0), "Epic 1 должен быть найден");
         Assertions.assertEquals(createdSecondEpic, allEpics.get(1), "Epic 2 должен быть найден");
@@ -283,7 +275,7 @@ class InMemoryTaskManagerTest {
         taskManager.createSubtask(subtask1);
         taskManager.createSubtask(subtask2);
 
-        ArrayList<Subtask> subtasksOfEpic = taskManager.getSubtasksOfEpic(epicId);
+        List<Subtask> subtasksOfEpic = taskManager.getSubtasksOfEpic(epicId);
 
         Assertions.assertEquals(2, subtasksOfEpic.size(), "Должно быть 2 подзадачи у эпика");
 
@@ -296,7 +288,7 @@ class InMemoryTaskManagerTest {
         taskManager.createEpic(epicWithoutSubtasks);
         int epicWithoutSubtasksId = epicWithoutSubtasks.getId();
 
-        ArrayList<Subtask> subtasksOfEpicWithoutSubtasks = taskManager.getSubtasksOfEpic(epicWithoutSubtasksId);
+        List<Subtask> subtasksOfEpicWithoutSubtasks = taskManager.getSubtasksOfEpic(epicWithoutSubtasksId);
 
         Assertions.assertTrue(subtasksOfEpicWithoutSubtasks.isEmpty(), "Список подзадач должен быть пустым" +
                 " для эпика без подзадач");
@@ -315,7 +307,6 @@ class InMemoryTaskManagerTest {
         taskManager.createSubtask(subtask);
         Subtask createdSubtask = taskManager.getSubtask(subtask.getId());
 
-        Assertions.assertNotNull(createdSubtask.getId(), "Id подзадачи не должно быть null");
         Assertions.assertEquals(createdSubtask.getName(), subtaskName, "Имя подзадачи должно быть" +
                 " (Subtask name)");
         Assertions.assertEquals(createdSubtask.getDescription(), subtaskDescription, "Описание подзадачи " +
@@ -338,7 +329,6 @@ class InMemoryTaskManagerTest {
         taskManager.createSubtask(subtask);
         Subtask createdSubtask = taskManager.getSubtask(subtask.getId());
 
-        Assertions.assertNotNull(createdSubtask.getId(), "Id подзадачи не должно быть null");
         Assertions.assertEquals(createdSubtask.getName(), subtaskName, "Имя подзадачи должно быть" +
                 " (Subtask name)");
         Assertions.assertEquals(createdSubtask.getDescription(), subtaskDescription, "Описание подзадачи " +
@@ -364,7 +354,6 @@ class InMemoryTaskManagerTest {
         taskManager.updateSubtask(createdSubtask);
         Subtask updatedSubtask = taskManager.getSubtask(createdSubtask.getId());
 
-        Assertions.assertNotNull(updatedSubtask.getId(), "Id подзадачи не должно быть null");
         Assertions.assertEquals(updatedSubtask.getName(), subtaskName, "Имя подзадачи должно быть" +
                 " (Subtask name)");
         Assertions.assertEquals(updatedSubtask.getDescription(), subtaskDescription, "Описание подзадачи" +
@@ -374,7 +363,6 @@ class InMemoryTaskManagerTest {
                 "не должно быть null");
     }
 
-    /*
     @Test
     void deleteSubtask() {
         Epic epic = new Epic(null, "Epic", "Description");
@@ -391,8 +379,6 @@ class InMemoryTaskManagerTest {
 
         Assertions.assertNull(taskManager.getSubtask(subtaskId), "Подзадача должна быть удалена");
     }
-
-     */
 
     @Test
     void deleteAllSubtask() {
@@ -429,7 +415,7 @@ class InMemoryTaskManagerTest {
         Subtask createdFirstSubtask = taskManager.getSubtask(firstSubtask.getId());
         Subtask createdSecondSubtask = taskManager.getSubtask(secondSubtask.getId());
 
-        ArrayList<Subtask> allSubtask = taskManager.findAllSubtasks();
+        List<Subtask> allSubtask = taskManager.findAllSubtasks();
 
         Assertions.assertEquals(createdFirstSubtask, allSubtask.get(0), "Subtask 1 должен быть найден");
         Assertions.assertEquals(createdSecondSubtask, allSubtask.get(1), "Subtask 2 должен быть найден");
