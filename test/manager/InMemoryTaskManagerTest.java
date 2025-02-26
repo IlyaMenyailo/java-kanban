@@ -435,6 +435,9 @@ class InMemoryTaskManagerTest {
         Assertions.assertEquals(createdFirstSubtask, subtaskFoundById, "Subtask 1 должен быть найден");
     }
 
+    // Странно, теперь этот тест не работает. После обновления статуса, он обновляется и в history, что не должно быть.
+    // Раньше тест работал, но сейчас почему-то нет, не могу понять. Даже изменения назад откатывал, все равно не работает.
+    // И как я понял, что существенные изменения я не вносил, они не могли повлиять на тест.
     @Test
     void taskInHistoryListShouldNotBeUpdatedAfterTaskUpdate() {
         Task task = new Task(null, "Task name", "Task description", Status.NEW);
@@ -447,7 +450,7 @@ class InMemoryTaskManagerTest {
 
         Status statusInHistoryBeforeUpdate = taskInHistory.getStatus();
 
-        task.setStatus(Status.DONE);
+        task.setStatus(Status.DONE); // тут происходит обновление статуса, в том числе и в history, но раньше он не менялся
         taskManager.updateTask(task);
 
         Task taskInHistoryAfterUpdate = taskManager.getHistory().get(0);
