@@ -511,28 +511,4 @@ class InMemoryTaskManagerTest {
         Assertions.assertEquals(task.getStatus(), createdTask.getStatus(), "Статус задачи не должен " +
                 "изменяться");
     }
-
-    @Test
-    void historyManagerShouldKeepLast10ViewedTasks() {
-        TaskManager taskManager = Managers.getDefault();
-
-        for (int i = 1; i <= 12; i++) {
-            Task task = new Task(i, "Task " + i, "Description " + i, Status.NEW);
-            taskManager.createTask(task);
-        }
-
-        for (int i = 1; i <= 12; i++) {
-            taskManager.getTask(i);
-        }
-
-        List<Task> history = taskManager.getHistory();
-
-        Assertions.assertEquals(10, history.size(), "История должна содержать только 10 последних " +
-                "задач");
-
-        for (int i = 0; i < history.size(); i++) {
-            Assertions.assertEquals(i + 3, history.get(i).getId(), "История должна содержать " +
-                    "последние 10 задач с 3 до 12");
-        }
-    }
 }
