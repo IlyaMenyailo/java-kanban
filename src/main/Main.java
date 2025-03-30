@@ -36,10 +36,14 @@ public class Main {
         manager.createEpic(epic2);
         Epic epic3 = new Epic(null, "Epic 3", "Description of epic 3");
         manager.createEpic(epic3);
+        Epic epicWithoutSubtasks = new Epic(null, "Epic epicWithoutSubtasks",
+                "Description of epic epicWithoutSubtasks");
+        manager.createEpic(epicWithoutSubtasks);
 
         Epic createdEpic1 = manager.getEpic(epic1.getId());
         Epic createdEpic2 = manager.getEpic(epic2.getId());
         Epic createdEpic3 = manager.getEpic(epic3.getId());
+        Epic createdEpicWithoutSubtasks = manager.getEpic(epicWithoutSubtasks.getId());
 
         //САБТАСКИ
         Subtask subtask1 = new Subtask(null, "Subtask 1", "Description of subtask 1", Status.NEW,
@@ -74,7 +78,22 @@ public class Main {
         Task createdTask6 = manager.getTask(task2.getId());
         Task createdTask7 = manager.getTask(task3.getId());
 
+        Task createdTask1Second = manager.getTask(task1.getId());
+        Task createdTask2Second = manager.getTask(task2.getId());
+        Task createdTask3Second = manager.getTask(task3.getId());
+        Task createdTask4Second = manager.getTask(task4.getId());
+
         System.out.println("История вариант 2:");
+        System.out.println(manager.getHistory());
+
+        manager.deleteTask(task1.getId());
+        manager.deleteTask(task2.getId());
+
+        System.out.println("История вариант 3:");
+        System.out.println(manager.getHistory());
+
+        manager.deleteEpic(epicWithoutSubtasks.getId());
+        System.out.println("История вариант 4:");
         System.out.println(manager.getHistory());
     }
 }
