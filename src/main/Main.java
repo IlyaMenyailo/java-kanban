@@ -95,5 +95,14 @@ public class Main {
         manager.deleteEpic(epicWithoutSubtasks.getId());
         System.out.println("История вариант 4:");
         System.out.println(manager.getHistory());
+
+        manager.deleteAllTasks();
+        manager.deleteAllSubtask();
+        System.out.println("История вариант 5:");
+        System.out.println(manager.getHistory());
+
+        manager.deleteAllEpics();
+        System.out.println("История вариант 6:");
+        System.out.println(manager.getHistory());
     }
 }
