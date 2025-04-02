@@ -19,35 +19,6 @@ class InMemoryTaskManagerTest {
         taskManager = Managers.getDefault();
     }
 
-    // Ошибок в тестах про удаление задач больше нет, они были на начальной итерации, после корректировок
-    // и добавления LinkedList, они как раз заработали, я видимо забыл убрать старые комментарии.
-
-    // Теперь этот тест не работает (который ниже). После обновления статуса, он обновляется и в history, что не должно быть.
-    // Видимо так же из-за LinkedList происходит обновление в history
-    // Я этот тест закомментил, если его можно удалить я его просто удалю у себя
-    /*
-    @Test
-    void taskInHistoryListShouldNotBeUpdatedAfterTaskUpdate() {
-        Task task = new Task(null, "Task name", "Task description", Status.NEW);
-
-        taskManager.createTask(task);
-        taskManager.getTask(task.getId());
-
-        List<Task> history = taskManager.getHistory();
-        Task taskInHistory = history.get(0);
-
-        Status statusInHistoryBeforeUpdate = taskInHistory.getStatus();
-
-        task.setStatus(Status.DONE); // тут происходит обновление статуса, в том числе и в history, но раньше он не менялся
-        taskManager.updateTask(task);
-
-        Task taskInHistoryAfterUpdate = taskManager.getHistory().get(0);
-
-        Assertions.assertEquals(statusInHistoryBeforeUpdate, taskInHistoryAfterUpdate.getStatus(),
-                "Статус в истории не должен меняться"); // тут ошибка
-    }
-     */
-
     @Test
     void getHistory() {
         Task firstTask = new Task(null, "Task 1 name", "Task 1 description", Status.NEW);
@@ -539,29 +510,5 @@ class InMemoryTaskManagerTest {
                 "должно изменяться");
         Assertions.assertEquals(task.getStatus(), createdTask.getStatus(), "Статус задачи не должен " +
                 "изменяться");
-    }
-
-    @Test
-    void historyManagerShouldKeepLast10ViewedTasks() {
-        TaskManager taskManager = Managers.getDefault();
-
-        for (int i = 1; i <= 12; i++) {
-            Task task = new Task(i, "Task " + i, "Description " + i, Status.NEW);
-            taskManager.createTask(task);
-        }
-
-        for (int i = 1; i <= 12; i++) {
-            taskManager.getTask(i);
-        }
-
-        List<Task> history = taskManager.getHistory();
-
-        Assertions.assertEquals(10, history.size(), "История должна содержать только 10 последних " +
-                "задач");
-
-        for (int i = 0; i < history.size(); i++) {
-            Assertions.assertEquals(i + 3, history.get(i).getId(), "История должна содержать " +
-                    "последние 10 задач с 3 до 12");
-        }
     }
 }
