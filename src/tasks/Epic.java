@@ -1,6 +1,7 @@
 package tasks;
 
 import status.Status;
+import status.TaskType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,11 @@ public class Epic extends Task {
     public void removeSubtask(Integer subtaskId) {
 
         subtasksId.remove(subtaskId);
+    }
+
+    @Override
+    public TaskType getType() {
+        return TaskType.EPIC;
     }
 
     @Override

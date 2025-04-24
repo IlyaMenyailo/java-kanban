@@ -1,6 +1,7 @@
 package tasks;
 
 import status.Status;
+import status.TaskType;
 
 public class Subtask extends Task {
 
@@ -19,6 +20,11 @@ public class Subtask extends Task {
     public void setEpicId(Integer epicId) {
 
         this.epicId = epicId;
+    }
+
+    @Override
+    public TaskType getType() {
+        return TaskType.SUBTASK;
     }
 
     @Override
