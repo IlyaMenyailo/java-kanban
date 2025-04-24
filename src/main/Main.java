@@ -120,7 +120,7 @@ public class Main {
             Epic epic21 = new Epic(null, "Epic 21", "Description Epic 21");
             manager1.createEpic(epic21);
 
-            Subtask subtask21 = new Subtask(null, "Subtask 21", "Description Subtask 21", Status.NEW,epic21.getId());
+            Subtask subtask21 = new Subtask(null, "Subtask 21", "Description Subtask 21", Status.NEW, epic21.getId());
             manager1.createSubtask(subtask21);
 
             System.out.println("Tasks in manager1:");
