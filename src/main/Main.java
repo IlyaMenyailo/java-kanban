@@ -112,32 +112,32 @@ public class Main {
         try {
             File file = File.createTempFile("tasks", ".csv");
 
-            FileBackedTaskManager manager1 = new FileBackedTaskManager(file);
+            TaskManager managerFileBacked = Managers.getDefaultFileBackedManager(file);
 
             Task task21 = new Task(null, "Task 21", "Description 21", Status.NEW);
-            manager1.createTask(task21);
+            managerFileBacked.createTask(task21);
 
             Epic epic21 = new Epic(null, "Epic 21", "Description Epic 21");
-            manager1.createEpic(epic21);
+            managerFileBacked.createEpic(epic21);
 
             Subtask subtask21 = new Subtask(null, "Subtask 21", "Description Subtask 21", Status.NEW, epic21.getId());
-            manager1.createSubtask(subtask21);
+            managerFileBacked.createSubtask(subtask21);
 
-            System.out.println("Tasks in manager1:");
-            System.out.println(manager1.findAllTasks());
-            System.out.println("Epics in manager1:");
-            System.out.println(manager1.findAllEpics());
-            System.out.println("Subtasks in manager1:");
-            System.out.println(manager1.findAllSubtasks());
+            System.out.println("Tasks in managerFileBacked:");
+            System.out.println(managerFileBacked.findAllTasks());
+            System.out.println("Epics in managerFileBacked:");
+            System.out.println(managerFileBacked.findAllEpics());
+            System.out.println("Subtasks in managerFileBacked:");
+            System.out.println(managerFileBacked.findAllSubtasks());
 
-            FileBackedTaskManager manager2 = FileBackedTaskManager.loadFromFile(file);
+            FileBackedTaskManager managerLoaded = FileBackedTaskManager.loadFromFile(file);
 
-            System.out.println("\nTasks in manager2:");
-            System.out.println(manager2.findAllTasks());
-            System.out.println("Epics in manager2:");
-            System.out.println(manager2.findAllEpics());
-            System.out.println("Subtasks in manager2:");
-            System.out.println(manager2.findAllSubtasks());
+            System.out.println("\nTasks in managerLoaded:");
+            System.out.println(managerLoaded.findAllTasks());
+            System.out.println("Epics in managerLoaded:");
+            System.out.println(managerLoaded.findAllEpics());
+            System.out.println("Subtasks in managerLoaded:");
+            System.out.println(managerLoaded.findAllSubtasks());
 
             if (file.exists()) {
                 System.out.println("Файл создан: " + file.getAbsolutePath());
@@ -146,8 +146,8 @@ public class Main {
                 System.out.println("Файл не создан!");
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException exception) {
+            exception.printStackTrace();
         }
     }
 }

@@ -56,8 +56,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
             }
 
-        } catch (IOException e) {
-            throw new ManagerSaveException("Ошибка при загрузке из файла", e);
+        } catch (IOException exception) {
+            throw new ManagerSaveException("Ошибка при загрузке из файла", exception);
         }
         return manager;
     }
@@ -196,5 +196,26 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public void deleteAllSubtask() {
         super.deleteAllSubtask();
         save();
+    }
+
+    @Override
+    public Task getTask(Integer id) {
+        Task task = super.getTask(id);
+        save();
+        return task;
+    }
+
+    @Override
+    public Epic getEpic(Integer id) {
+        Epic epic = super.getEpic(id);
+        save();
+        return epic;
+    }
+
+    @Override
+    public Subtask getSubtask(Integer id) {
+        Subtask subtask = super.getSubtask(id);
+        save();
+        return subtask;
     }
 }
