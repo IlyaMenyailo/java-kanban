@@ -1,11 +1,15 @@
 package main;
 
+import manager.FileBackedTaskManager;
 import manager.Managers;
 import manager.TaskManager;
 import status.Status;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
+
+import java.io.File;
+import java.io.IOException;
 
 public class Main {
 
@@ -104,5 +108,46 @@ public class Main {
         manager.deleteAllEpics();
         System.out.println("История вариант 6:");
         System.out.println(manager.getHistory());
+
+        try {
+            File file = File.createTempFile("tasks", ".csv");
+
+            TaskManager managerFileBacked = Managers.getDefaultFileBackedManager(file);
+
+            Task task21 = new Task(null, "Task 21", "Description 21", Status.NEW);
+            managerFileBacked.createTask(task21);
+
+            Epic epic21 = new Epic(null, "Epic 21", "Description Epic 21");
+            managerFileBacked.createEpic(epic21);
+
+            Subtask subtask21 = new Subtask(null, "Subtask 21", "Description Subtask 21", Status.NEW, epic21.getId());
+            managerFileBacked.createSubtask(subtask21);
+
+            System.out.println("Tasks in managerFileBacked:");
+            System.out.println(managerFileBacked.findAllTasks());
+            System.out.println("Epics in managerFileBacked:");
+            System.out.println(managerFileBacked.findAllEpics());
+            System.out.println("Subtasks in managerFileBacked:");
+            System.out.println(managerFileBacked.findAllSubtasks());
+
+            FileBackedTaskManager managerLoaded = FileBackedTaskManager.loadFromFile(file);
+
+            System.out.println("\nTasks in managerLoaded:");
+            System.out.println(managerLoaded.findAllTasks());
+            System.out.println("Epics in managerLoaded:");
+            System.out.println(managerLoaded.findAllEpics());
+            System.out.println("Subtasks in managerLoaded:");
+            System.out.println(managerLoaded.findAllSubtasks());
+
+            if (file.exists()) {
+                System.out.println("Файл создан: " + file.getAbsolutePath());
+                System.out.println("Размер файла: " + file.length() + " байт");
+            } else {
+                System.out.println("Файл не создан!");
+            }
+
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 }
