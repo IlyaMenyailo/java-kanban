@@ -33,9 +33,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     private final Set<Task> prioritizedTasks = new TreeSet<>(
             Comparator.comparing(
-            Task::getStartTime,
-            Comparator.nullsLast(Comparator.naturalOrder())
-    ));
+                    Task::getStartTime,
+                    Comparator.nullsLast(Comparator.naturalOrder())
+            ));
 
     @Override
     public List<Task> getHistory() {

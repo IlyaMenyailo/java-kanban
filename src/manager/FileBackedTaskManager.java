@@ -214,6 +214,4 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         super.deleteAllSubtask();
         save();
     }
-
-
 }

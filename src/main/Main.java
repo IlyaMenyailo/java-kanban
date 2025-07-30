@@ -75,7 +75,7 @@ public class Main {
             );
             System.out.println();
 
-             // 5. Проверка пересечений
+            // 5. Проверка пересечений
             System.out.println("=== Проверка пересечений ===");
             Task overlappingTask = new Task(null, "Неправильная задача", "Должна пересекаться",
                     Status.NEW);
