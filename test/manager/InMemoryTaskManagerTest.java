@@ -1,5 +1,6 @@
 package manager;
 
+import exeption.ManagerSaveException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,9 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 class InMemoryTaskManagerTest {
@@ -36,6 +40,55 @@ class InMemoryTaskManagerTest {
                 " в истории");
     }
 
+    @Test
+    void getPrioritizedTasks() {
+        Task task1 = new Task(null, "Task 1", "Description", Status.NEW);
+        task1.setStartTime(LocalDateTime.now());
+        task1.setDuration(Duration.ofMinutes(30));
+
+        Task task2 = new Task(null, "Task 2", "Description", Status.NEW);
+        task2.setStartTime(LocalDateTime.now().plusHours(1));
+        task2.setDuration(Duration.ofMinutes(30));
+
+        taskManager.createTask(task2);
+        taskManager.createTask(task1);
+
+        // Получаем копию множества для безопасной работы
+        List<Task> prioritized = new ArrayList<>(taskManager.getPrioritizedTasks());
+
+        Assertions.assertEquals(2, prioritized.size(), "Неверное количество задач");
+        Assertions.assertEquals(task1.getId(), prioritized.get(0).getId(), "Неверный порядок задач");
+        Assertions.assertEquals(task2.getId(), prioritized.get(1).getId(), "Неверный порядок задач");
+    }
+
+    @Test
+    void testTaskTimeOverlap() {
+        LocalDateTime now = LocalDateTime.now();
+        Task task1 = new Task(null, "Task 1", "Description", Status.NEW,
+                Duration.ofMinutes(30), now);
+        Task task2 = new Task(null, "Task 2", "Description", Status.NEW,
+                Duration.ofMinutes(30), now.plusMinutes(15));
+
+        taskManager.createTask(task1);
+        Assertions.assertThrows(ManagerSaveException.class, () -> taskManager.createTask(task2));
+    }
+
+    @Test
+    void updateEpicTime() {
+        Epic epic = new Epic(null, "Test epic", "Test description");
+        taskManager.createEpic(epic);
+
+        Subtask subtask = new Subtask(null, "Test subtask", "Test description", Status.NEW, epic.getId());
+        subtask.setStartTime(LocalDateTime.of(2023, 1, 1, 10, 0));
+        subtask.setDuration(Duration.ofHours(2));
+        taskManager.createSubtask(subtask);
+
+        Epic updatedEpic = taskManager.getEpic(epic.getId());
+        Assertions.assertEquals(subtask.getStartTime(), updatedEpic.getStartTime(),
+                "Неверное время начала эпика");
+        Assertions.assertEquals(subtask.getEndTime(), updatedEpic.getEndTime(),
+                "Неверное время окончания эпика");
+    }
     @Test
     void createTask() {
         String name = "Task 1 name";
