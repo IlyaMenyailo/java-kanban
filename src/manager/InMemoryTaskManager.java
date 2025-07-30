@@ -125,7 +125,7 @@ public class InMemoryTaskManager implements TaskManager {
             prioritizedTasks.remove(removedTask);
             historyManager.remove(id);
         }
-        return tasks.remove(id);
+        return removedTask;
     }
 
     @Override
@@ -220,8 +220,10 @@ public class InMemoryTaskManager implements TaskManager {
             return;
         }
 
-        boolean allNew = subtasksOfEpic.stream().allMatch(s -> s.getStatus() == Status.NEW);
-        boolean allDone = subtasksOfEpic.stream().allMatch(s -> s.getStatus() == Status.DONE);
+        boolean allNew = subtasksOfEpic.stream().
+                allMatch(subtask -> subtask.getStatus() == Status.NEW);
+        boolean allDone = subtasksOfEpic.stream().
+                allMatch(subtask -> subtask.getStatus() == Status.DONE);
 
         if (allNew) {
             epic.setStatus(Status.NEW);
@@ -286,8 +288,8 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epics.get(newSubtask.getEpicId());
         if (epic != null) {
             int newId = nextId();
-            subtasks.put(newId, newSubtask);
             newSubtask.setId(newId);
+            subtasks.put(newId, newSubtask);
             epic.addSubtask(newSubtask.getId());
             updateEpicStatus(epic);
             updateEpicTime(epic);

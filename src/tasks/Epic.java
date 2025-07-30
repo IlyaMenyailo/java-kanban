@@ -13,7 +13,7 @@ public class Epic extends Task {
 
     private final List<Integer> subtasksId;
     private LocalDateTime endTime;
-    Duration duration;
+    private Duration duration;
 
     @Override
     public Duration getDuration() {
@@ -59,24 +59,6 @@ public class Epic extends Task {
     @Override
     public TaskType getType() {
         return TaskType.EPIC;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-
-        Epic epic = (Epic) o;
-        return Objects.equals(subtasksId, epic.subtasksId) && Objects.equals(endTime, epic.endTime);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + Objects.hashCode(subtasksId);
-        result = 31 * result + Objects.hashCode(endTime);
-        return result;
     }
 
     @Override
