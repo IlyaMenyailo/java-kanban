@@ -220,10 +220,10 @@ public class InMemoryTaskManager implements TaskManager {
             return;
         }
 
-        boolean allNew = subtasksOfEpic.stream().
-                allMatch(subtask -> subtask.getStatus() == Status.NEW);
-        boolean allDone = subtasksOfEpic.stream().
-                allMatch(subtask -> subtask.getStatus() == Status.DONE);
+        boolean allNew = subtasksOfEpic.stream()
+                .allMatch(subtask -> subtask.getStatus() == Status.NEW);
+        boolean allDone = subtasksOfEpic.stream()
+                .allMatch(subtask -> subtask.getStatus() == Status.DONE);
 
         if (allNew) {
             epic.setStatus(Status.NEW);
