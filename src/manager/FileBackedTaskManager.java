@@ -10,6 +10,9 @@ import tasks.Task;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
@@ -84,12 +87,19 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     protected static String toString(Task task) {
-        String result = String.format("%d,%s,%s,%s,%s,",
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        String startTimeStr = task.getStartTime() != null ? task.getStartTime().format(formatter) : "";
+        String durationStr = task.getDuration() != null ? String.valueOf(task.getDuration().toMinutes()) : "";
+
+        String result = String.format("%d,%s,%s,%s,%s,%s,%s,",
                 task.getId(),
                 task.getType(),
                 task.getName(),
                 task.getStatus(),
-                task.getDescription());
+                task.getDescription(),
+                durationStr,
+                startTimeStr);
+
         if (task.getType() == TaskType.SUBTASK) {
             result = result + ((Subtask) task).getEpicId();
         }
@@ -106,16 +116,23 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         Status status = Status.valueOf(parts[3]);
         String description = parts[4];
 
+        Duration duration = parts.length > 5 && !parts[5].isEmpty() ?
+                Duration.ofMinutes(Long.parseLong(parts[5])) : null;
+        LocalDateTime startTime = parts.length > 6 && !parts[6].isEmpty() ?
+                LocalDateTime.parse(parts[6]) : null;
+
         switch (type) {
             case TASK:
-                return new Task(id, name, description, status);
+                return new Task(id, name, description, status, duration, startTime);
             case EPIC:
                 Epic epic = new Epic(id, name, description);
                 epic.setStatus(status);
+                epic.setDuration(duration);
+                epic.setStartTime(startTime);
                 return epic;
             case SUBTASK:
-                int epicId = Integer.parseInt(parts[5]);
-                return new Subtask(id, name, description, status, epicId);
+                int epicId = Integer.parseInt(parts[7]);
+                return new Subtask(id, name, description, status, epicId, duration, startTime);
             default:
                 return null;
         }

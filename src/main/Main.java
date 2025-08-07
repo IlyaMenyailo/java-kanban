@@ -1,6 +1,5 @@
 package main;
 
-import manager.FileBackedTaskManager;
 import manager.Managers;
 import manager.TaskManager;
 import status.Status;
@@ -10,135 +9,109 @@ import tasks.Task;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class Main {
 
     public static void main(String[] args) {
         System.out.println("Поехали!\n");
 
-        TaskManager manager = Managers.getDefault();
-
-        //ЗАДАЧИ
-        Task task1 = new Task(null, "Task 1", "Description of task 1", Status.NEW);
-        manager.createTask(task1);
-        Task task2 = new Task(null, "Task 2", "Description of task 2", Status.NEW);
-        manager.createTask(task2);
-        Task task3 = new Task(null, "Task 3", "Description of task 3", Status.NEW);
-        manager.createTask(task3);
-        Task task4 = new Task(null, "Task 4", "Description of task 4", Status.NEW);
-        manager.createTask(task4);
-
-        Task createdTask1 = manager.getTask(task1.getId());
-        Task createdTask2 = manager.getTask(task2.getId());
-        Task createdTask3 = manager.getTask(task3.getId());
-        Task createdTask4 = manager.getTask(task4.getId());
-
-        //ЭПИКИ
-        Epic epic1 = new Epic(null, "Epic 1", "Description of epic 1");
-        manager.createEpic(epic1);
-        Epic epic2 = new Epic(null, "Epic 2", "Description of epic 2");
-        manager.createEpic(epic2);
-        Epic epic3 = new Epic(null, "Epic 3", "Description of epic 3");
-        manager.createEpic(epic3);
-        Epic epicWithoutSubtasks = new Epic(null, "Epic epicWithoutSubtasks",
-                "Description of epic epicWithoutSubtasks");
-        manager.createEpic(epicWithoutSubtasks);
-
-        Epic createdEpic1 = manager.getEpic(epic1.getId());
-        Epic createdEpic2 = manager.getEpic(epic2.getId());
-        Epic createdEpic3 = manager.getEpic(epic3.getId());
-        Epic createdEpicWithoutSubtasks = manager.getEpic(epicWithoutSubtasks.getId());
-
-        //САБТАСКИ
-        Subtask subtask1 = new Subtask(null, "Subtask 1", "Description of subtask 1", Status.NEW,
-                createdEpic1.getId());
-        manager.createSubtask(subtask1);
-        Subtask subtask2 = new Subtask(null, "Subtask 2", "Description of subtask 2", Status.NEW,
-                createdEpic1.getId());
-        manager.createSubtask(subtask2);
-        Subtask subtask3 = new Subtask(null, "Subtask 3", "Description of subtask 3", Status.NEW,
-                createdEpic2.getId());
-        manager.createSubtask(subtask3);
-        Subtask subtask4 = new Subtask(null, "Subtask 4", "Description of subtask 4", Status.NEW,
-                createdEpic3.getId());
-        manager.createSubtask(subtask4);
-        Subtask subtask5 = new Subtask(null, "Subtask 5", "Description of subtask 5", Status.NEW,
-                createdEpic3.getId());
-        manager.createSubtask(subtask5);
-        Subtask subtask6 = new Subtask(null, "Subtask 6", "Description of subtask 6", Status.NEW,
-                createdEpic3.getId());
-        manager.createSubtask(subtask6);
-
-        System.out.println("История вариант 1:");
-        System.out.println(manager.getHistory());
-
-        Subtask createdSubtask1 = manager.getSubtask(subtask1.getId());
-        Subtask createdSubtask2 = manager.getSubtask(subtask2.getId());
-        Subtask createdSubtask3 = manager.getSubtask(subtask3.getId());
-        Subtask createdSubtask4 = manager.getSubtask(subtask4.getId());
-        Subtask createdSubtask5 = manager.getSubtask(subtask5.getId());
-        Subtask createdSubtask6 = manager.getSubtask(subtask6.getId());
-        Task createdTask5 = manager.getTask(task1.getId());
-        Task createdTask6 = manager.getTask(task2.getId());
-        Task createdTask7 = manager.getTask(task3.getId());
-
-        Task createdTask1Second = manager.getTask(task1.getId());
-        Task createdTask2Second = manager.getTask(task2.getId());
-        Task createdTask3Second = manager.getTask(task3.getId());
-        Task createdTask4Second = manager.getTask(task4.getId());
-
-        System.out.println("История вариант 2:");
-        System.out.println(manager.getHistory());
-
-        manager.deleteTask(task1.getId());
-        manager.deleteTask(task2.getId());
-
-        System.out.println("История вариант 3:");
-        System.out.println(manager.getHistory());
-
-        manager.deleteEpic(epicWithoutSubtasks.getId());
-        System.out.println("История вариант 4:");
-        System.out.println(manager.getHistory());
-
-        manager.deleteAllTasks();
-        manager.deleteAllSubtask();
-        System.out.println("История вариант 5:");
-        System.out.println(manager.getHistory());
-
-        manager.deleteAllEpics();
-        System.out.println("История вариант 6:");
-        System.out.println(manager.getHistory());
-
         try {
             File file = File.createTempFile("tasks", ".csv");
 
             TaskManager managerFileBacked = Managers.getDefaultFileBackedManager(file);
 
-            Task task21 = new Task(null, "Task 21", "Description 21", Status.NEW);
-            managerFileBacked.createTask(task21);
+            // 1. Создание тестовых задач
+            System.out.println("=== Создание задач ===");
 
-            Epic epic21 = new Epic(null, "Epic 21", "Description Epic 21");
-            managerFileBacked.createEpic(epic21);
+            Task task1 = new Task(null, "Помыть посуду", "Помыть посуду после ужина", Status.NEW);
+            task1.setStartTime(LocalDateTime.of(2023, 6, 15, 18, 0));
+            task1.setDuration(Duration.ofMinutes(30));
+            managerFileBacked.createTask(task1);
+            System.out.println("Создана задача: " + task1);
 
-            Subtask subtask21 = new Subtask(null, "Subtask 21", "Description Subtask 21", Status.NEW, epic21.getId());
-            managerFileBacked.createSubtask(subtask21);
+            Task task2 = new Task(null, "Убраться дома", "Сделать уборку в квартире", Status.NEW);
+            task2.setStartTime(LocalDateTime.of(2023, 6, 15, 19, 0));
+            task2.setDuration(Duration.ofHours(2));
+            managerFileBacked.createTask(task2);
+            System.out.println("Создана задача: " + task2 + "\n");
 
-            System.out.println("Tasks in managerFileBacked:");
-            System.out.println(managerFileBacked.findAllTasks());
-            System.out.println("Epics in managerFileBacked:");
-            System.out.println(managerFileBacked.findAllEpics());
-            System.out.println("Subtasks in managerFileBacked:");
-            System.out.println(managerFileBacked.findAllSubtasks());
+            // 2. Создание Эпиков
+            System.out.println("=== Создание эпиков ===");
 
-            FileBackedTaskManager managerLoaded = FileBackedTaskManager.loadFromFile(file);
+            Epic epic1 = new Epic(null, "Ремонт в квартире", "Полный ремонт во всех комнатах");
+            managerFileBacked.createEpic(epic1);
+            System.out.println("Создан эпик: " + epic1);
 
-            System.out.println("\nTasks in managerLoaded:");
-            System.out.println(managerLoaded.findAllTasks());
-            System.out.println("Epics in managerLoaded:");
-            System.out.println(managerLoaded.findAllEpics());
-            System.out.println("Subtasks in managerLoaded:");
-            System.out.println(managerLoaded.findAllSubtasks());
+            Subtask subtask1 = new Subtask(null, "Купить материалы", "Купить стройматериалы", Status.NEW, epic1.getId());
+            subtask1.setStartTime(LocalDateTime.of(2023, 6, 16, 10, 0));
+            subtask1.setDuration(Duration.ofHours(3));
+            managerFileBacked.createSubtask(subtask1);
+            System.out.println("Создана подзадача: " + subtask1);
 
+            Subtask subtask2 = new Subtask(null, "Сделать дизайн", "Разработать дизайн-проект", Status.NEW, epic1.getId());
+            subtask2.setStartTime(LocalDateTime.of(2023, 6, 16, 14, 0));
+            subtask2.setDuration(Duration.ofHours(4));
+            managerFileBacked.createSubtask(subtask2);
+            System.out.println("Создана подзадача: " + subtask2 + "\n");
+
+            // 3. Проверка статусов
+            System.out.println("=== Проверка статусов ===");
+            System.out.println("Статус эпика: " + epic1.getStatus());
+
+            subtask1.setStatus(Status.IN_PROGRESS);
+            managerFileBacked.updateSubtask(subtask1);
+            System.out.println("После изменения статуса подзадачи: " + epic1.getStatus() + "\n");
+
+            // 4. Приоритетные задачи
+            System.out.println("=== Приоритетные задачи ===");
+            managerFileBacked.getPrioritizedTasks().forEach(task ->
+                    System.out.printf("%s: %s (%s - %s)\n",
+                            task.getType(),
+                            task.getName(),
+                            task.getStartTime(),
+                            task.getEndTime())
+            );
+            System.out.println();
+
+            // 5. Проверка пересечений
+            System.out.println("=== Проверка пересечений ===");
+            Task overlappingTask = new Task(null, "Неправильная задача", "Должна пересекаться",
+                    Status.NEW);
+            overlappingTask.setStartTime(LocalDateTime.of(2023, 6, 15, 18, 30));
+            overlappingTask.setDuration(Duration.ofHours(1));
+            try {
+                managerFileBacked.createTask(overlappingTask);
+            } catch (Exception e) {
+                System.out.println("Ошибка при создании: " + e.getMessage());
+            }
+            System.out.println();
+
+            // 6. История просмотров
+            System.out.println("=== История просмотров ===");
+            managerFileBacked.getTask(task1.getId());
+            managerFileBacked.getEpic(epic1.getId());
+            managerFileBacked.getSubtask(subtask1.getId());
+
+            System.out.println("История:");
+            managerFileBacked.getHistory().forEach(task ->
+                    System.out.println("- " + task.getName() + " (" + task.getType() + ")")
+            );
+            System.out.println();
+
+            // 7. Удаление задач
+            System.out.println("=== Удаление задачи ===");
+            managerFileBacked.deleteTask(task1.getId());
+            System.out.println("Задачи после удаления:");
+            managerFileBacked.findAllTasks().forEach(t -> System.out.println("- " + t.getName()));
+            System.out.println("История после удаления:");
+            managerFileBacked.getHistory().forEach(task ->
+                    System.out.println("- " + task.getName())
+            );
+
+            System.out.println();
+            System.out.println("=== Информация о сохраненном файле ===");
             if (file.exists()) {
                 System.out.println("Файл создан: " + file.getAbsolutePath());
                 System.out.println("Размер файла: " + file.length() + " байт");

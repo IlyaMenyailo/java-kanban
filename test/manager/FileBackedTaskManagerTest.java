@@ -13,12 +13,12 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
-public class FileBackedTaskManagerTest {
+public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     private File tempFile;
     private FileBackedTaskManager manager;
 
     @BeforeEach
-    public void init() throws IOException {
+    public void setUp() throws IOException {
         tempFile = File.createTempFile("tasks", ".csv");
         manager = new FileBackedTaskManager(tempFile);
     }
