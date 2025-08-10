@@ -29,7 +29,7 @@ public interface TaskManager {
     Task findTaskById(Integer id);
 
     //EPICS//
-    void createEpic(Epic newEpic);
+    Epic createEpic(Epic newEpic);
 
     Epic getEpic(Integer id);
 
