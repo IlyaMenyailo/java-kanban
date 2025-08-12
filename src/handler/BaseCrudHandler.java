@@ -51,8 +51,11 @@ public abstract class BaseCrudHandler<T> extends BaseHttpHandler implements Http
     }
 
     protected abstract void handleGetAll(HttpExchange exchange) throws IOException;
+
     protected abstract void handleGetById(HttpExchange exchange, String idStr) throws IOException;
+
     protected abstract void handlePost(HttpExchange exchange) throws IOException;
+
     protected abstract void handleDelete(HttpExchange exchange, String idStr) throws IOException;
 
     protected T parseTask(HttpExchange exchange) throws IOException {
