@@ -165,9 +165,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void createEpic(Epic epic) {
+    public Epic createEpic(Epic epic) {
         super.createEpic(epic);
         save();
+        return epic;
     }
 
     @Override
